@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css" crossorigin="anonymous">
+    <title>Prixz :: Scraper de Precios</title>
+</head>
+
+<body>
+
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="https://prixz.com/public/img/brand-black@3x.png" alt="Prixz" height="50">
+            </a>
+        </div>
+    </nav>
+
+
+    <div class="card">
+        <div class="card-content">
+
+            <h2 class="title">Scraper de Precios</h2>
+            <p>Esta utilidad recuperará los precios de las farmacias que seleccione de los productos del catálogo maestro de Prixz.
+            </p>
+            <p>Tome en cuenta que la generación del reporte puede tardar mucho tiempo debido a las prácticas del scraping responsable. Una vez que el reporte sea generado, se enviará al correo indicado</p>
+
+            <hr>
+            <form method="POST" action="/process">
+
+                <input type="hidden" name="_token" value="wOGCIr8KiMI6De1d7Xe7W9FKcI3pGfuUUwjPunT1">
+
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control has-icons-left ">
+                        <input class="input " type="email" placeholder="El email al que se enviará el reporte" name="email" autofocus>
+                        <span class="icon is-small is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    </div>
+                </div>
+
+                <br/>
+
+
+                <div class="field">
+                    <label class="checkbox">
+                    <input type="checkbox" name="san_pablo">
+                    Incluír precios de Farmacias San Pablo
+                </label>
+                </div>
+
+                <div class="field">
+                    <label class="checkbox">
+                    <input type="checkbox" name="del_ahorro">
+                    Incluír precios de Farmacias del Ahorro
+                </label>
+                </div>
+
+                <div class="field">
+                    <label class="checkbox">
+                    <input type="checkbox" name="farmalisto">
+                    Incluír precios de FarmaListo
+                </label>
+                </div>
+
+                <div class="field">
+                    <label class="checkbox">
+                    <input type="checkbox" name="farmasmart">
+                    Incluír precios de FarmaSmart
+                </label>
+                </div>
+
+                <br/>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-link">Comenzar Scraping</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+</body>
+
+</html>

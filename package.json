@@ -1,0 +1,20 @@
+{
+  "name": "scraper2",
+  "version": "0.9.1",
+  "description": "New version of the online pharmacies scraper",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "scraper"
+  ],
+  "author": "@Quantium",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "events": "^3.0.0",
+    "mongodb": "^3.3.2",
+    "puppeteer": "^1.19.0"
+  }
+}
