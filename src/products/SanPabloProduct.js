@@ -2,7 +2,10 @@ const cheerio = require('cheerio');
 
 module.exports = class SanPabloProduct {
     constructor(raw) {
-        this.$ = cheerio.load(raw);
+        if (raw) {
+            this.$ = cheerio.load(raw);
+        }
+
     }
     get html() {
         return this.$.html();
