@@ -16,7 +16,7 @@ module.exports = class SanPabloDoc extends EventEmitter {
 
     }
     async init() {
-        var browser = await puppeteer.launch();
+        var browser = await puppeteer.launch({ headless: true });
         this.page = await browser.newPage();
         var time1 = (new Date()).getTime();
         await this.page.goto(searchURL + this._ean, { waitUntil: 'networkidle2' }).catch(err => {

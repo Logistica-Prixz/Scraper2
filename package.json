@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jasmine",
-        "run": "node index.js"
+        "start": "node index.js"
     },
     "keywords": [
         "scraper"
@@ -16,6 +16,7 @@
         "cheerio": "^1.0.0-rc.3",
         "events": "^3.0.0",
         "mongodb": "^3.3.2",
-        "puppeteer": "^1.19.0"
+        "puppeteer": "^1.19.0",
+        "puppeteer-core": "^1.19.0"
     }
 }

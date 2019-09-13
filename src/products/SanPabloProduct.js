@@ -13,7 +13,7 @@ module.exports = class SanPabloProduct {
         if (match) {
             return match[0];
         }
-        return 9999999;
+        return 999999;
 
     }
 }
