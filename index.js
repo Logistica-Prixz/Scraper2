@@ -12,15 +12,20 @@ const MongoClient = require('mongodb').MongoClient;
     var doc = new SanPabloDoc(cursor.next());
     const ready = async html => {
         if (await doc.price < 99999) {
-            scraper.updateOne({ ean: await doc.ean }, { "$set": { prices: { sanpablo: await doc.price } } }, { upsert: true },
-                async function(err, data) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("score succeded", await doc.ean);
+            try {
+                scraper.updateOne({ ean: await doc.ean }, { "$set": { prices: { sanpablo: await doc.price } } }, { upsert: true },
+                    async function(err, data) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("saved", await doc.ean, await doc.price);
+                        }
                     }
-                }
-            );
+                );
+            } catch (e) {
+                console.log(e);
+            }
+
         }
         if (cursor.hasNext) {
             let next = await cursor.next();
