@@ -11,10 +11,13 @@ module.exports = class SanPabloProduct {
         return this.$.html();
     }
     get price() {
-        var el = this.$('.item-prize').text();
-        var match = el.match(/[-+]?[0-9]*\.?[0-9]+/g);
-        if (match) {
-            return match[0];
+        if (this.$) {
+            var el = this.$('.item-prize').text();
+            var match = el.match(/[-+]?[0-9]*\.?[0-9]+/g);
+            if (match) {
+                return match[0];
+            }
+
         }
         return 999999;
 
