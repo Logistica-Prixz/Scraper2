@@ -26,6 +26,7 @@ module.exports = class SanPabloDoc extends EventEmitter {
         this._content = await this.page.content();
         this._loadtime = (time2 - time1) / 1000;
         console.log("-[", this._loadtime, "]-");
+        await browser.close();
     }
     get content() {
         return this._content;
