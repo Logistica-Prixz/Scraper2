@@ -14,7 +14,7 @@ const MongoClient = require('mongodb').MongoClient;
     var doc = new SanPabloDoc(coso.codigoEAN1);
     const ready = async html => {
         console.log("---->", typeof await doc.price, await doc.price);
-        if (await doc.price <= 999999) {
+        if (await doc.price < 999999) {
             try {
                 scraper.updateOne({ ean: await doc.ean }, { "$set": { prices: { sanpablo: await doc.price } } }, { upsert: true },
                     async function(err, data) {
