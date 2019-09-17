@@ -1,7 +1,9 @@
 const cheerio = require('cheerio');
 
 module.exports = class SanPabloProduct {
+    _raw;
     constructor(raw) {
+        this._raw = raw;
         if (raw) {
             this.$ = cheerio.load(raw);
         }
@@ -12,12 +14,11 @@ module.exports = class SanPabloProduct {
     }
     get price() {
         if (this.$) {
-            var el = this.$('.item-prize').text();
+            var el = cheerio.text(this.$('.item-prize')).trim();
             var match = el.match(/[-+]?[0-9]*\.?[0-9]+/g);
             if (match) {
-                return match[0];
+                return parseFloat(match[0]);
             }
-
         }
         return 999999;
 
