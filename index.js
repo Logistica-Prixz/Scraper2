@@ -9,9 +9,9 @@ const MongoClient = require('mongodb').MongoClient;
     var scraper = db.collection('scraper');
     var cursor = await product.find({}, { projection: { _id: 0, codigoEAN1: true } });
 
-    var coso = await cursor.next();
-    console.log("coso", coso.codigoEAN1);
-    var doc = new SanPabloDoc(coso.codigoEAN1);
+    var child = await cursor.next();
+    console.log("first child", child.codigoEAN1);
+    var doc = new SanPabloDoc(cursor.codigoEAN1);
 
     const ready = async html => {
         if (await doc.price < 999999) {

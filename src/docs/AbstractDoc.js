@@ -1,10 +1,7 @@
-const puppeteer = require('puppeteer');
 const EventEmitter = require('events');
 
-//const SanPabloProduct = require('../products/SanPabloProduct');
-
 module.exports = class AbstractDoc extends EventEmitter {
-    _content;
+    _content = "No content";
     _loadtime;
     _ean;
     constructor(ean) {
@@ -12,22 +9,27 @@ module.exports = class AbstractDoc extends EventEmitter {
         this.setMaxListeners(1000);
         this._ean = ean;
         (async() => {
-            await this.init();
+            this._content = await this.init();
             this.emit('ready', this._content);
         })();
         return this;
     }
     async init() {
-        var browser = await puppeteer.launch({ headless: true });
-        this.page = await browser.newPage();
-        var time1 = (new Date()).getTime();
-        await this.page.goto(await this.docUrl, { waitUntil: 'networkidle2' });
-        var time2 = (new Date()).getTime();
-        this._content = await this.page.content();
-        this._loadtime = (time2 - time1) / 1000;
-        console.log("-[ Load time: ", this._loadtime, "]-");
-        await browser.close();
-        return this._content;
+        return new Promise(async(resolve, reject) => {
+            // select http or https module, depending on reqested url
+            const url = await this.docUrl;
+            const lib = url.startsWith('https') ? require('https') : require('http');
+            const request = lib.get(url, (response) => {
+                if (response.statusCode < 200 || response.statusCode > 299) {
+                    reject(new Error('Failed to load page, status code: ' + response.statusCode));
+                }
+                const body = [];
+                response.on('data', (chunk) => body.push(chunk));
+                this._content = body.join('');
+                response.on('end', () => resolve(body.join('')));
+            });
+            request.on('error', (err) => reject(err))
+        });
     }
     get content() {
         return this._content;
