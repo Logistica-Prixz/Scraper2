@@ -75,7 +75,8 @@ module.exports = class AbstractScrap extends EventEmitter {
                         doc = new this._docClass(next.codigoEAN1.toString());
                         doc.on('ready', ready);
                     } else {
-                        console.log("ERROR", next.codigoEAN1);
+                        console.log(that._normalizeName(that._name, NAME_LENGTH), "End of collection");
+                        this.emit("end");
                     }
                 }
             }

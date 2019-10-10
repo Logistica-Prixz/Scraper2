@@ -1,7 +1,5 @@
 const AbstractScrap = require('./AbstractScrap');
 const FarmalistoDoc = require('../docs/FarmalistoDoc');
-const { MongoClient } = require('mongodb');
-
 
 module.exports = class FarmalistoScrap extends AbstractScrap {
     _name = 'FarmalistoScrap';
