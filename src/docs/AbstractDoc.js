@@ -2,6 +2,7 @@ const { EventEmitter } = require('events');
 
 module.exports = class AbstractDoc extends EventEmitter {
     _content = "No content";
+    _productClass;
     _loadtime;
     _ean;
     constructor(ean) {
@@ -9,15 +10,29 @@ module.exports = class AbstractDoc extends EventEmitter {
         this.setMaxListeners(1000);
         this._ean = ean;
         (async() => {
-            this._content = await this.init();
-            this.emit('ready', this._content);
+            try {
+
+                this._content = await this.init();
+                this.emit('ready', this._content);
+            } catch (error) {
+                console.error(error);
+                process.exit(1);
+                return;
+            }
         })();
         return this;
     }
+
+    get price() {
+        var p = new this._productClass(this._content);
+        return parseFloat(p.price);
+    }
+
     async init() {
         return new Promise(async(resolve, reject) => {
             // select http or https module, depending on reqested url
             const url = await this.docUrl;
+
             const lib = url.startsWith('https') ? require('https') : require('http');
             const request = lib.get(url, (response) => {
                 if (response.statusCode < 200 || response.statusCode > 299) {
@@ -33,11 +48,6 @@ module.exports = class AbstractDoc extends EventEmitter {
     }
     get content() {
         return this._content;
-    }
-    get price() {
-        throw new Error("Abstract Method AbstractDoc.price() , implement a child class to use it");
-        return null
-
     }
     get loadtime() {
         return this._loadtime;

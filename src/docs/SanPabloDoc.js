@@ -1,17 +1,10 @@
 const AbstractDoc = require("./AbstractDoc");
+const SanPabloProduct = require('../products/SanPabloProduct');
 const searchURL = 'https://www.farmaciasanpablo.com.mx/search/?text=';
 
-const SanPabloProduct = require('../products/SanPabloProduct');
 
 module.exports = class SanPabloDoc extends AbstractDoc {
-    constructor(ean) {
-        super(ean);
-    }
-    get price() {
-        var p = new SanPabloProduct(this._content);
-        return parseFloat(p.price);
-
-    }
+    _productClass = SanPabloProduct;
     get docUrl() {
         return searchURL + this._ean;
     }

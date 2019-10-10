@@ -1,6 +1,7 @@
 const Doc = require('../docs/AbstractDoc');
 const { MongoClient } = require('mongodb');
 const { EventEmitter } = require('events');
+const NAME_LENGTH = 20;
 
 module.exports = class AbstractScrap extends EventEmitter {
     _settings = {};
@@ -18,6 +19,7 @@ module.exports = class AbstractScrap extends EventEmitter {
         } else {
             throw new Error("(" + this._name + "::constructor) Setting object null or empty");
         }
+        this.getPrices();
     }
 
     _collectionWriteObj(price) {
@@ -28,7 +30,6 @@ module.exports = class AbstractScrap extends EventEmitter {
     /**
      * @description getPrices get the prices from the proper server and return them
      *
-     * @param {*} [settings={}] the full settings object
      * @returns prices list in form of [{EAN,Price},..]
      */
     async getPrices() {
@@ -40,17 +41,17 @@ module.exports = class AbstractScrap extends EventEmitter {
         const that = this;
 
         var child = await cursor.next();
-        var doc = new this._docClass(cursor.codigoEAN1);
+        var doc = await new this._docClass(child.codigoEAN1);
         const ready = async() => {
             if (await doc.price < 999999) {
-                scraper.updateOne({ ean: await doc.ean }, { "$set": { prices: this._collectionWriteObj(await doc.price) } }, { upsert: true },
+                scraper.updateOne({ ean: await doc.ean }, this._collectionWriteObj(await doc.price), { upsert: true },
                     async function(err, data) {
                         if (err) {
                             console.log(err);
                             process.exit(1);
                             return;
                         }
-                        console.log("Saved", doc.ean, doc.price);
+                        console.log(that._normalizeName(that._name, NAME_LENGTH), ":: Saved", doc.ean, doc.price);
                         if (cursor.hasNext) {
                             let next = await cursor.next();
                             if (next.codigoEAN1) {
@@ -65,7 +66,7 @@ module.exports = class AbstractScrap extends EventEmitter {
                 );
 
             } else {
-                console.log("No price. No saved", doc.ean, doc.price);
+                console.log(that._normalizeName(that._name, NAME_LENGTH), ":: No price. No saved", doc.ean, doc.price);
                 //Hate to do this, repeating code I mean, but it's temporary
                 if (cursor.hasNext) {
                     let next = await cursor.next();
@@ -80,6 +81,15 @@ module.exports = class AbstractScrap extends EventEmitter {
             }
         };
         doc.on('ready', ready);
+
+
+    }
+
+    _normalizeName(name, spaces) {
+        while (name.length < spaces) {
+            name += " ";
+        }
+        return name;
 
     }
 };
