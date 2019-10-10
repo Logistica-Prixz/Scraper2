@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 
 module.exports = class AbstractDoc extends EventEmitter {
     _content = "No content";
