@@ -1,0 +1,21 @@
+type Query {
+        course(id: Int!): Course
+        courses(topic: String): [Course]
+        quoteOfTheDay: String
+        random: Float!
+        rollDice(numDice: Int!, numSides: Int): [Int]
+        getDie(numSides: Int): RandomDie
+},
+    type Course {
+        id: Int
+        title: String
+        author: String
+        description: String
+        topic: String
+        url: String
+},
+    type RandomDie {
+        numSides: Int!
+        rollOnce: Int!
+        roll(numRolls: Int!): [Int]
+    }

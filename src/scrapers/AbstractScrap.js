@@ -55,9 +55,7 @@ module.exports = class AbstractScrap extends EventEmitter {
                         if (cursor.hasNext) {
                             let next = await cursor.next();
                             if (next && next.codigoEAN1) {
-                                doc.removeAllListeners('ready');
-                                doc = new that._docClass(next.codigoEAN1.toString());
-                                doc.on('ready', ready);
+                                doc = this.resetDoc(doc, next, ready);
                             } else {
                                 console.log("ERROR", next.codigoEAN1);
                                 console.log(err);
@@ -73,10 +71,8 @@ module.exports = class AbstractScrap extends EventEmitter {
                 //Hate to do this, repeating code I mean, but it's temporary
                 if (cursor.hasNext) {
                     let next = await cursor.next();
-                    if (next.codigoEAN1) {
-                        doc.removeAllListeners('ready');
-                        doc = new this._docClass(next.codigoEAN1.toString());
-                        doc.on('ready', ready);
+                    if (next && next.codigoEAN1) {
+                        doc = this.resetDoc(doc, next, ready);
                     } else {
                         console.log(that._normalizeName(that._name, NAME_LENGTH), "End of collection");
                         this.emit("end");
@@ -87,6 +83,13 @@ module.exports = class AbstractScrap extends EventEmitter {
         doc.on('ready', ready);
 
 
+    }
+
+    resetDoc(doc, next, ready) {
+        doc.removeAllListeners('ready');
+        doc = new this._docClass(next.codigoEAN1.toString());
+        doc.on('ready', ready);
+        return doc;
     }
 
     _normalizeName(name, spaces) {

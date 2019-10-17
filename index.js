@@ -2,6 +2,20 @@ const settings = require('./settings.js')();
 const SanPabloScrap = require('./src/scrapers/SanPabloScrap');
 const AhorroScrap = require('./src/scrapers/AhorroScrap');
 const FarmalistoScrap = require('./src/scrapers/FarmalistoScrap');
+//////< Express server >//////
+const express = require('express');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+oauthserver = require('oauth2-server');
+const express_graphql = require('express-graphql');
+const { buildSchema } = require('graphql');
+
+var app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+var schema = buildSchema(fs.readFileSync(__dirname + '/schema.graphql', 'utf8'));
+
+//////< Scraping daemon >//////
 try {
     (async() => {
         var counter = 0;
