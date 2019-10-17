@@ -22,16 +22,15 @@ A scraping class emits an **end** event when all the EANS in the collection were
 
 The Scraper uses a Document class to know how to manage that url, go for the price and get it
 
-
 ### Document class
 
 A Document class emits a **ready** event when the content is ready
 
 To create a Document class only implement the [AbstractDoc](src/docs/AbstractDoc.js) one and implement any way to get the price of that ean. Right now, all the Docs classes set the file constant __searchURL__  to an static one and concatenate it with the ean. That's because all the site scraped respond to EAN search directly and uses GET variables to do it, generating a url with the form **http(s)//(Website)(some query variable)(the ean number of the product), this are some examples:
 
-- https://www.farmalisto.com.mx/resultados?s=7501008491966
-- https://www.farmaciasanpablo.com.mx/search/?text=7501008491966
-- https://www.farmalisto.com.mx/resultados?s=7501008491966
+- <https://www.farmalisto.com.mx/resultados?s=7501008491966>
+- <https://www.farmaciasanpablo.com.mx/search/?text=7501008491966>
+- <https://www.farmalisto.com.mx/resultados?s=7501008491966>
 
 Notice the pattern here. All the searches gets Aspirina as product and gets in the same page the price, so the scraping is easy in this examples.
 
@@ -45,15 +44,34 @@ The prices must be returned in float format.block
 
 To create a Product class you should override the **price** getter to analize the content an return the price
 
-# Setup
-
-The setup of this project should be very easy. Just install Node JS (you should know how to program with it of course) and follow the instructions below
-
 ## Installation
 
 Just run
+
 ```bash
 npm install
+```
+
+## Settings file
+
+There is an [settings file example](settings.example.js) with all you need to know to setup a real settings.js file. For security reasons **never share any settings.js file with anyone**; every settings.js file must be kept only inside the server or machine with its related environment.
+
+The settins file is a module that exports a single function that receives no parameters and returns a simple object. That was the best way to load a config file avoiding loading time and parsing.
+
+```Javascript
+module.exports = () => {
+    return {
+        mongo: {
+            //For more information about connection string in mongo go to https://docs.mongodb.com/manual/reference/connection-string/
+            url: 'mongodb://<user>:<password>@<url>:<port>,<replica_url>:<replica_port>/<database>?<options>',
+            //The name of the Mongo collection where the products EAN will be used
+            productCollection: 'producto-prixz',
+            //The name of the collection to deposit the results of the scraping process
+            scraperCollection: 'scraper'
+        }
+    };
+};
+
 ```
 
 ## Running
@@ -65,5 +83,3 @@ pm2 start index.js --name Scraper2 --time --watch
 ```
 
 The project if full of process.exit(1) everywhere in order to end the process hoping that pm2 restart it again
-
-
