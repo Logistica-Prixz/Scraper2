@@ -41,10 +41,10 @@ module.exports = class AbstractScrap extends EventEmitter {
         const that = this;
 
         var child = await cursor.next();
-        var doc = await new this._docClass(child.codigoEAN1);
+        var doc = await new this._docClass(child.codigoEAN1.toString());
         const ready = async() => {
             if (await doc.price < 999999) {
-                scraper.updateOne({ ean: await doc.ean }, this._collectionWriteObj(await doc.price), { upsert: true },
+                scraper.updateOne({ ean: await doc.ean }, that._collectionWriteObj(await doc.price), { upsert: true },
                     async function(err, data) {
                         if (err) {
                             console.log(err);
@@ -54,8 +54,8 @@ module.exports = class AbstractScrap extends EventEmitter {
                         console.log(that._normalizeName(that._name, NAME_LENGTH), ":: Saved", doc.ean, doc.price);
                         if (cursor.hasNext) {
                             let next = await cursor.next();
-                            if (next && next.codigoEAN1) {
-                                doc = this.resetDoc(doc, next, ready);
+                            if (next && that && next.codigoEAN1) {
+                                doc = that.resetDoc(doc, next, ready);
                             } else {
                                 console.log("ERROR", next.codigoEAN1);
                                 console.log(err);
