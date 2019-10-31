@@ -57,7 +57,6 @@ module.exports = class AbstractScrap extends EventEmitter {
                             if (next && that && next.codigoEAN1) {
                                 doc = that.resetDoc(doc, next, ready);
                             } else {
-                                console.log("ERROR", next.codigoEAN1);
                                 console.log(err);
                                 process.exit(1);
                                 return;
