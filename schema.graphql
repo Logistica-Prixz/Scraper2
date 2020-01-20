@@ -1,21 +1,104 @@
 type Query {
-        course(id: Int!): Course
-        courses(topic: String): [Course]
-        quoteOfTheDay: String
-        random: Float!
-        rollDice(numDice: Int!, numSides: Int): [Int]
-        getDie(numSides: Int): RandomDie
-},
-    type Course {
-        id: Int
-        title: String
-        author: String
+    getFile(id: ID!): File
+    getFiles(authorId: String, createdBetween:DateRank, generatedBetween:DateRank, downloadedBetween:DateRank): [File]
+    getUser(id: ID!): User
+    getUsers(name:String, lastname:String, email:String, createdBetween:DateRank, modifiedBetween:DateRank): [User]
+    getNotification(id:ID!):Notification
+    getNotifications(read:Boolean):[Notification]
+}
+type Mutation {
+    createUser(
+        name: String!,
+        lastname: String!,
+        lastname2: String,
+        email: String!,
+        permissions: [[String]],
+        avatar: String
+    ):User
+
+    askForFile(
+        title: String!,
+        requesterID: String!,
         description: String
-        topic: String
-        url: String
-},
-    type RandomDie {
-        numSides: Int!
-        rollOnce: Int!
-        roll(numRolls: Int!): [Int]
-    }
+    ):File
+
+    pushNotification(
+        name:String!,
+        title:String!,
+        description:String!,
+        icon:String,
+        link:String
+    ):Notification
+}
+
+type Date {
+    getDay:Int!
+    getMonth:Int!
+    getFullYear:Int!
+    getHours:Int!
+    getMinutes:Int!
+    getSeconds:Int!
+    getTime:Int!
+    toString:String!
+}
+input DateRank{
+    iDay:Int!
+    iMonth:Int!
+    iYear:Int!
+    iHour:Int!
+    iMinute:Int!
+    iSecond:Int!
+    fDay:Int!
+    fMonth:Int!
+    fYear:Int!
+    fHour:Int!
+    fMinute:Int!
+    fSecond:Int!
+    seconds:Int!
+}
+type File {
+    id: ID!
+    title: String!
+    author: User!
+    description: String
+    url: String
+    status:FileStatus
+    asked:Date!
+    generated:Date
+    downloaded:[Date]
+}
+enum FileStatus {
+    REQUESTED
+    GENERATING
+    GENERATED
+    DELETED
+    ERROR
+}
+type User {
+    id: ID!
+    name: String!
+    lastname: String!
+    lastname2: String
+    email: String!
+    permissions: [[String]]!
+    avatar: String
+    created:Date!
+    modified:Date!
+}
+type Notification {
+    id:ID!
+    name:String!
+    title:String!
+    description:String!
+    icon:String
+    link:String
+    read:Date
+}
+input FileSettings{
+    sanPablo:Boolean!
+    fragua:Boolean!
+    farmaListo:Boolean!
+    delAhorro:Boolean!
+    withDescription:Boolean!
+    getSugestedPrice:Boolean!
+}
